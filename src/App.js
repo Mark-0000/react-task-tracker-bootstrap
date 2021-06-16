@@ -1,23 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
+import { Card } from "react-bootstrap";
+import TodoBody from "./components/TodoBody";
+import TodoHeader from "./components/TodoHeader";
 
 function App() {
+  const [todos, setTodos] = useState([]);
+  useEffect(() => {
+    if (localStorage.getItem("todos") === null) {
+      localStorage.setItem("todos", JSON.stringify([]));
+    } else {
+      let todoLocal = JSON.parse(localStorage.getItem("todos"));
+      setTodos(todoLocal);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      className="d-flex justify-content-center align-items-center"
+      style={{ minHeight: "100vh", margin: 0, padding: "10px" }}
+    >
+      <Card className="w-100" style={{ maxWidth: "700px" }}>
+        <TodoHeader todos={todos} setTodos={setTodos} />
+        <TodoBody todos={todos} setTodos={setTodos} />
+      </Card>
     </div>
   );
 }
