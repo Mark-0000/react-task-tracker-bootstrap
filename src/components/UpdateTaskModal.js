@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 
 export default function NewTaskModal({
@@ -8,16 +8,22 @@ export default function NewTaskModal({
   isModalOpen,
   todo,
 }) {
-  const newTaskRef = useRef();
   const checkBoxRef = useRef();
+  const [updateTaskInput, setUpdateTaskInput] = useState(todo.text);
+  const priorityCheckBoxRef = useRef();
   const handleSubmit = (e) => {
     e.preventDefault();
-    const textValue = newTaskRef.current.value;
     const checkboxValue = checkBoxRef.current.checked;
+    const priorityCheckboxValue = priorityCheckBoxRef.current.checked;
     setTodos(
       todos.map((item) => {
         if (item.id === todo.id) {
-          return { ...item, completed: checkboxValue, text: textValue };
+          return {
+            ...item,
+            completed: checkboxValue,
+            text: updateTaskInput,
+            priority: priorityCheckboxValue,
+          };
         }
         return item;
       })
@@ -27,7 +33,7 @@ export default function NewTaskModal({
   return (
     <div>
       <Modal show={isModalOpen} onHide={closeModal}>
-        <Modal.Header closeButton>
+        <Modal.Header className="bg-dark text-light">
           <h4>Update Task</h4>
         </Modal.Header>
         <Modal.Body>
@@ -35,22 +41,44 @@ export default function NewTaskModal({
             <Form.Group>
               <Form.Label>Task Name</Form.Label>
               <Form.Control
-                placeholder="Enter New Task"
-                ref={newTaskRef}
-                defaultValue={todo.text}
+                placeholder={todo.text}
+                value={updateTaskInput}
+                onChange={(e) => setUpdateTaskInput(e.target.value)}
+                required
               ></Form.Control>
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Check
-                type="checkbox"
-                label="Completed"
-                ref={checkBoxRef}
-                defaultChecked={todo.completed}
-              />
-            </Form.Group>
-            <Button className="btn-block" type="submit">
-              Update
-            </Button>
+            <div className="d-flex mb-3">
+              <Form.Group>
+                <Form.Check
+                  type="checkbox"
+                  label="Priority"
+                  ref={priorityCheckBoxRef}
+                  defaultChecked={todo.priority}
+                />
+              </Form.Group>
+              <Form.Group className="ml-3">
+                <Form.Check
+                  type="checkbox"
+                  label="Completed"
+                  ref={checkBoxRef}
+                  defaultChecked={todo.completed}
+                />
+              </Form.Group>
+            </div>
+
+            <div>
+              <Button variant="secondary" onClick={closeModal}>
+                Close
+              </Button>
+              <Button
+                variant="info"
+                type="submit"
+                className="ml-2"
+                disabled={updateTaskInput ? false : true}
+              >
+                Save changes
+              </Button>
+            </div>
           </Form>
         </Modal.Body>
       </Modal>

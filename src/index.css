@@ -1,7 +1,22 @@
+/* width */
 ::-webkit-scrollbar {
-  width: 0;
+  width: 2px;
+}
+
+
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #343a40;
+}
+body {
+  height: 100vh;
+  margin: 0;
+  background-color: #555555;
+  /* background-color: yellow; */
 }
 .completed {
   text-decoration: line-through;
   opacity: 0.5;
 }
+

@@ -2,17 +2,23 @@ import React from "react";
 import { Card } from "react-bootstrap";
 import TodoItem from "./TodoItem";
 
-export default function TodoBody({ todos, setTodos }) {
+export default function TodoBody({ selected, todos, filteredTodos, setTodos }) {
   return (
     <div>
-      <Card.Body
-        style={{ overflowX: "hidden", overflowY: "scroll", maxHeight: "500px" }}
+      <Card.Body className="bg-secondary"
+        style={{ overflowX: "hidden", overflowY: "scroll", height: "83vh" }}
       >
-        {todos.length === 0 ? (
-          <h5>No Task/s To Do</h5>
+        {filteredTodos.length === 0 ? (
+          <h6 className="text-light">{`${
+            selected === "all"
+              ? "No Task/s To Do"
+              : selected === "completed"
+              ? "No Completed Task/s"
+              : "No Uncompleted Task/s"
+          }`}</h6>
         ) : (
           <div>
-            {todos.map((todo) => (
+            {filteredTodos.map((todo) => (
               <TodoItem
                 todos={todos}
                 key={todo.id}
